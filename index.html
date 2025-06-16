@@ -79,18 +79,14 @@
         const files = e.dataTransfer.files;
         saveFiles(files);
       });
-      function loginWithGitHub() {
-  const clientId = 'Ov23liFbWr4MtYFHersT'; // <- Wklej tutaj z GitHub
-  const redirectUri = encodeURIComponent(location.origin + '/podstrony-/callback.html');
-  const scope = 'public_repo'; // pozwala pushować do repo publicznego
-  const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
-  window.location.href = authUrl;
-  document.getElementById('login-button').addEventListener('click', () => {
-  const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=repo`;
-  window.location.href = githubAuthUrl;
-}
-
     });
+    const clientId = 'Ov23liFbWr4MtYFHersT'; // Twój GitHub OAuth Client ID
+const redirectUri = location.origin + '/podstrony-/callback.html'; // Upewnij się, że to wpisane też w GitHub OAuth App!
+
+document.getElementById('login-button').addEventListener('click', () => {
+  const githubAuthUrl = https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=public_repo;
+  window.location.href = githubAuthUrl;
+}); 
   </script>
 </body>
 </html>
