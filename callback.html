@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Callback</title></head>
+<body>
+<script>
+  const code = new URLSearchParams(window.location.search).get('code');
+  if (code) {
+    localStorage.setItem('oauth_code', code);
+    window.location.href = 'index.html'; // wróć na główną
+  } else {
+    document.body.innerText = "Brak kodu autoryzacyjnego.";
+  }
+</script>
+</body>
+</html>
