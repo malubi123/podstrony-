@@ -20,6 +20,7 @@
   <input type="text" id="page-input" placeholder="Wpisz nazwę podstrony" />
   <div id="dropzone">Przeciągnij pliki tutaj</div>
   <p>Po wrzuceniu plików idź na <code>podstrona.html?page=nazwaPodstrony</code>, aby je zobaczyć.</p>
+  <button onclick="loginWithGitHub()">🔐 Zaloguj przez GitHub</button>
 
   <script>
     let db;
@@ -78,6 +79,14 @@
         const files = e.dataTransfer.files;
         saveFiles(files);
       });
+      function loginWithGitHub() {
+  const clientId = 'TWÓJ_CLIENT_ID'; // <- Wklej tutaj z GitHub
+  const redirectUri = encodeURIComponent(location.origin + '/podstrony-/callback.html');
+  const scope = 'public_repo'; // pozwala pushować do repo publicznego
+  const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+  window.location.href = authUrl;
+}
+
     });
   </script>
 </body>
