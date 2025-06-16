@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pliki podstrony</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    .file {
+      margin: 0.5rem 0;
+    }
+    .preview {
+      max-width: 300px;
+      max-height: 300px;
+      display: block;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pliki podstrony: <span id="page-name"></span></h1>
+  <div id="files"></div>
+
+  <script>
+    let db;
+
+    function getPageFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("page") || "default";
+    }
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open("FileDatabase", 1);
+        request.onerror = () => reject("IndexedDB error");
+        request.onsuccess = () => resolve(request.result);
+        request.onupgradeneeded = e => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains("files")) {
+            db.createObjectStore("files", { keyPath: "id", autoIncrement: true });
+          }
+        };
+      });
+    }
+
+    function loadFiles(page) {
+      document.getElementById("page-name").textContent = page;
+      const tx = db.transaction("files", "readonly");
+      const store = tx.objectStore("files");
+      const filesContainer = document.getElementById("files");
+      filesContainer.innerHTML = "";
+
+      const cursor = store.openCursor();
+      cursor.onsuccess = function(e) {
+        const result = e.target.result;
+        if (result) {
+          const file = result.value;
+          if (file.page === page) {
+            const div = document.createElement("div");
+            div.className = "file";
+            div.innerHTML = `<strong>${file.name}</strong>`;
+            if (file.type.startsWith("image/")) {
+              const img = document.createElement("img");
+              img.src = URL.createObjectURL(file.blob);
+              img.className = "preview";
+              div.appendChild(img);
+            }
+            filesContainer.appendChild(div);
+          }
+          result.continue();
+        }
+      };
+    }
+
+    openDB().then(database => {
+      db = database;
+      const page = getPageFromQuery();
+      loadFiles(page);
+    });
+  </script>
+</body>
+</html>
