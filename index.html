@@ -79,15 +79,7 @@
         const files = e.dataTransfer.files;
         saveFiles(files);
         }); // koniec openDB
-
-// 👇 A tu po zamknięciu openDB dajesz GitHub login
-const clientId = 'Ov23liFbWr4MtYFHersT';
-const redirectUri = location.origin + '/podstrony-/callback.html';
-
-document.getElementById('login-button').addEventListener('click', () => {
-  const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=public_repo`;
-  window.location.href = githubAuthUrl;
-});
+        });
   </script>
 </body>
 </html>
