@@ -1,15 +1,38 @@
 <!DOCTYPE html>
-<html>
-<head><title>Callback</title></head>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Callback</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    #status { font-size: 1.2rem; }
+    code { background: #eee; padding: 0.2rem 0.4rem; border-radius: 4px; }
+  </style>
+</head>
 <body>
-<script>
-  const code = new URLSearchParams(window.location.search).get('code');
-  if (code) {
-    localStorage.setItem('oauth_code', code);
-    window.location.href = 'index.html'; // wróć na główną
-  } else {
-    document.body.innerText = "Brak kodu autoryzacyjnego.";
-  }
-</script>
+  <div id="status">Trwa sprawdzanie kodu autoryzacyjnego...</div>
+
+  <script>
+    const status = document.getElementById("status");
+    const code = new URLSearchParams(window.location.search).get("code");
+
+    if (code) {
+      try {
+        localStorage.setItem("oauth_code", code);
+        status.innerHTML = `
+          ✅ Kod autoryzacyjny odebrany: <code>${code}</code><br>
+          ✅ Zapisano w localStorage.<br>
+          🔄 Przekierowanie do strony głównej za 2 sekundy...
+        `;
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 2000);
+      } catch (err) {
+        status.innerHTML = `❌ Błąd przy zapisie do localStorage: ${err}`;
+      }
+    } else {
+      status.innerHTML = `❌ Brak kodu autoryzacyjnego w URL.<br> Czy na pewno przyszedłeś z GitHuba?`;
+    }
+  </script>
 </body>
 </html>
